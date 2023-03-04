@@ -69,7 +69,31 @@ class Graph:
 
 
     def get_path_with_power(self, src, dest, power): #complexité de O(n+m)
+        import math
+        visited = {node : False for node in self.nodes}
+        distance = {node : math.inf for node in self.nodes}
+        visited[src] = True
+        distance[src] = 0
+        k = src
+        path = [src]
+        while dest not in path : 
+            min_dist = math.inf
+            for node in self.graph[k] :
+                new_dist = distance[k] + node[1]
+                if not visited[node[0]]:
+                    if new_dist < distance[node[0]] and node[2] <= power :
+                        distance[node[0]] = new_dist
+                    if distance[node[0]] < min_dist :
+                        min_dist = distance[node[0]]
+                        min_node = node[0]
+            if min_dist != math.inf :
+                visited[min_node] = True
+                path.append(min_node)
+                k = min_node
+            else : return None      
+        return "path : " + str(path) + ", distance : " + str(distance[dest])
 
+        """ ************** Question 3 ***************
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
         nodes_v[src] = True
         def parcours(node, chemin) :
@@ -88,7 +112,7 @@ class Graph:
                     return parcours(k, chemin)
             return None
 
-        return parcours(src, [src])
+        return parcours(src, [src])"""
 
 
 
