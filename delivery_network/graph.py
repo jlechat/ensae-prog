@@ -68,7 +68,7 @@ class Graph:
         self.nb_edges+=1
 
 
-    def get_path_with_power(self, src, dest, power): #complexité de O(n+m)
+    def get_path_with_power(self, src, dest, power):
         import math
         visited = {node : False for node in self.nodes}
         distance = {node : math.inf for node in self.nodes}
@@ -93,7 +93,7 @@ class Graph:
             else : return None      
         return "path : " + str(path) + ", distance : " + str(distance[dest])
 
-        """ ************** Question 3 ***************
+        """ ************** Question 3  #complexité de O(n+m) ***************
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
         nodes_v[src] = True
         def parcours(node, chemin) :
@@ -177,7 +177,8 @@ class Graph:
             return self.get_path_with_power(src, dest, b), b
         while self.get_path_with_power(src, dest, b) == None :
             b = 2*b
-        return dicho(a, b)
+        return dicho(a, b)    
+        
 
 def graph_from_file(filename):
     """
