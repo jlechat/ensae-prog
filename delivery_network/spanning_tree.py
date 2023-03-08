@@ -26,25 +26,24 @@ class UnionFind:
 def Kruskal(G) : #prend un graph G en entrée
     U = UnionFind(G)
     nodes = []
-    edges = {}
+    edges = []
     X = Graph(nodes)
-    for u in G.nodes : #construction d'un dictionnaire ayant pour clés le poids des arêtes [u,v]
+    for u in G.nodes : #construction d'une liste contenant toutes les arêtes de G (arête = [power, u, v])
         for v in range(len(G.graph[u])) :
             power = G.graph[u][v][1]
-            edges[power] = [u,G.graph[u][v][0]]
-    s_edges = sorted(edges)
-    for power in s_edges :
-        u = edges[power][0]
-        v = edges[power][1]
+            v = G.graph[u][v][0]
+            if [power, v, u] not in edges : #pour ne pas ajouter deux fois chaque arête
+                edges.append([power, u, v])
+    s_edges = sorted(edges) #on trie les arêtes par ordre de poids
+    print(s_edges)
+    for edge in s_edges :
+        power = edge[0]
+        u = edge[1]
+        v = edge[2]
         if U.find(u) != U.find(v):
-            if u not in X.nodes :
-                X.nodes.append(u)
-            if v not in X.nodes :
-                X.nodes.append(v) #on ajoute les sommets u et v à l'abre couvrant
-            print(u,v,power)
-            X.add_edge(u,v,power)
-            U.union(u,v)
+            X.add_edge(u,v,power) #on ajoute l'arête (u,v) à l'arbre couvrant
+            U.union(u,v) #on unit les sous-ensembles des sommets u et v pour qu'ils aient le même "père"(on crée un arbre, sans cycle)
     return X
 
-G = graph_from_file("input/network.00.in")
+G = graph_from_file("input/network.02.in")
 print(Kruskal(G))
