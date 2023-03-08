@@ -46,37 +46,42 @@ def Kruskal(G) : # prend un graph G en entrée
             U.union(u,v) # on unit les sous-arbres des sommets u et v pour qu'ils aient le même "père"(on crée un arbre, sans cycle)
     return X
 
-G = graph_from_file("input/network.02.in")
-print(Kruskal(G))
 
 
 #Question 14 : même fonction que la Q3 (j'ai pas d'autre idée)
-def path_spanning_tree (G, src, dest) : 
+def path_spanning_tree (S, src, dest) : 
     """ Should return power_min, path """
 
-    nodes_v = {node : False for node in self.nodes}  #dictionnaire qui permet de savoir si l'on est déjà passé par un sommet
+    nodes_v = {node : False for node in S.nodes}  # dictionnaire qui permet de savoir si l'on est déjà passé par un sommet
     nodes_v [src] = True
-    power_min = []
+    powers = []  # on va garder dans une liste tous les powers plutôt que d'update un power_min, pour les cas où il faudrait repartir en arrière
         
     def parcours(node, path) :
         if node == dest:
-            return max(power_min), path
-        for i in self.graph[node] :
+            return max(powers), path
+        for i in S.graph[node] :
             k=i[0]
             k_power = i[1]
             if not nodes_v[k] :
                 nodes_v[k]=True
-                if k_power > power_min : power_min.append(k_power)
+                powers.append(k_power)
                 return parcours(k, path+[k])
-            elif i == self.graph[node][-1] and path[-1] != src : #en cas de cul-de-sac
+            elif i == S.graph[node][-1] and path[-1] != src : # en cas de cul-de-sac, on repart en arrière
                 nodes_v[i[0]]=True
-                power_min.pop()
+                powers.pop()
                 path.pop()
                 k = path[-1]
                 return parcours(k, path)
         return None
 
     return parcours(src, [src])
+
+
+
+G = graph_from_file("input/network.00.in")
+S = Kruskal(G)
+print(path_spanning_tree(S,1,2))
+
 
             
 
