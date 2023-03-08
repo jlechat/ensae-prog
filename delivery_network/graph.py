@@ -69,28 +69,29 @@ class Graph:
 
 
     def get_path_with_power(self, src, dest, power):
+        #Q5 : on implémente un Dijkstra
         import math
-        visited = {node : False for node in self.nodes}
-        distance = {node : math.inf for node in self.nodes}
+        visited = {node : False for node in self.nodes} #dictionnaire qui permet de savoir si le noeud a déjà été visité ou non
+        distance = {node : math.inf for node in self.nodes} #on donne +l'infini comme valeur de distance à la source pour tous les points
         visited[src] = True
         distance[src] = 0
         k = src
         path = [src]
         while dest not in path : 
             min_dist = math.inf
-            for node in self.graph[k] :
+            for node in self.graph[k] : # on regarde pour tous les voisins si faire un détour par le voisin améliore la distance du sommet à la source
                 new_dist = distance[k] + node[1]
                 if not visited[node[0]]:
-                    if new_dist < distance[node[0]] and node[2] <= power :
+                    if new_dist < distance[node[0]] and node[2] <= power : # si la nouvelle distance est meilleure et que la puissance nécessaire reste dans nos cordes, on remplace la valeur de la distance actuelle par la nouvelle
                         distance[node[0]] = new_dist
-                    if distance[node[0]] < min_dist :
+                    if distance[node[0]] < min_dist : # on ne garde que la meilleure des distances trouvées en passant par de nouveaux sommets dans la boucle for
                         min_dist = distance[node[0]]
                         min_node = node[0]
-            if min_dist != math.inf :
+            if min_dist != math.inf : # si min_dist a bougé, c'est qu'il y avait un nouveau sommet intéressant, donc on l'ajoute au chemin
                 visited[min_node] = True
                 path.append(min_node)
                 k = min_node
-            else : return None      
+            else : return None # si min_dist n'a pas bougé, c'est que la source et la destination ne sont pas reliées
         return "path : " + str(path) + ", distance : " + str(distance[dest])
 
         """ ************** Question 3  #complexité de O(n+m) ***************
@@ -105,7 +106,7 @@ class Graph:
                 if power >= k_power and not nodes_v[k]:
                     nodes_v[k]=True
                     return parcours(k, chemin+[k])
-                if i == self.graph[node][-1] and chemin[-1] != src :
+                elif i == self.graph[node][-1] and chemin[-1] != src :
                     nodes_v[i[0]]=True
                     chemin.pop()
                     k = chemin[-1]
@@ -113,7 +114,6 @@ class Graph:
             return None
 
         return parcours(src, [src])"""
-
 
 
 
@@ -147,38 +147,21 @@ class Graph:
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
-        """
-        """
-        nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
-        nodes_v[src] = True
-        def parcours(node, chemin, p) :
-            if node == dest:
-                return chemin, p
-            for i in self.graph[node] :
-                k=i[0]
-                k_power = i[1]
-                if not nodes_v[k]:
-                    nodes_v[k]=True
-                    if k_power>p : p=k_power
-                    return parcours(k, chemin+[k], p)
-            return None
-
-        return parcours(src, [src],0)
-        """
+        """        
         a = 0
         b = 1
-        def dicho(a, b) :
+        def dicho(a, b) : # on raisonne par dichotomie pour approcher la puissance minimale nécessaire sur le trajet
             while b-a > 0.1 :
-                if self.get_path_with_power(src, dest, (a+b)/2) != None:
+                if self.get_path_with_power(src, dest, (a+b)/2) != None: #si le trajet est faisable, alors on peut diminuer b
                     b = (a+b)/2
-                else :
+                else :                                                   #si le trajet n'est pas faisable, il faut augmenter a
                     a = (a+b)/2
                 dicho(a, b)
             return self.get_path_with_power(src, dest, b), b
-        while self.get_path_with_power(src, dest, b) == None :
-            b = 2*b
-        return dicho(a, b)    
         
+        while self.get_path_with_power(src, dest, b) == None : # on augmente b rapidement pour trouver un majorant de la puissance du trajet
+            b = 2*b
+        return dicho(a, b)
 
 def graph_from_file(filename):
     """
