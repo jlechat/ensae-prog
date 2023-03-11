@@ -68,7 +68,7 @@ class Graph:
         self.nb_edges+=1
 
 
-    def get_path_with_power(self, src, dest, power):
+    def get_path_with_power(self, src, dest, power): #complexité en O(V²)
         #Q5 : on implémente un Dijkstra
         import math
         visited = {node : False for node in self.nodes} #dictionnaire qui permet de savoir si le noeud a déjà été visité ou non
@@ -80,9 +80,9 @@ class Graph:
         while dest not in path : 
             min_dist = math.inf
             for node in self.graph[k] : # on regarde pour tous les voisins si faire un détour par le voisin améliore la distance du sommet à la source
-                new_dist = distance[k] + node[1]
+                new_dist = distance[k] + node[2]
                 if not visited[node[0]]:
-                    if new_dist < distance[node[0]] and node[2] <= power : # si la nouvelle distance est meilleure et que la puissance nécessaire reste dans nos cordes, on remplace la valeur de la distance actuelle par la nouvelle
+                    if new_dist < distance[node[0]] and node[1] <= power : # si la nouvelle distance est meilleure et que la puissance nécessaire reste dans nos cordes, on remplace la valeur de la distance actuelle par la nouvelle
                         distance[node[0]] = new_dist
                     if distance[node[0]] < min_dist : # on ne garde que la meilleure des distances trouvées en passant par de nouveaux sommets dans la boucle for
                         min_dist = distance[node[0]]
@@ -94,7 +94,7 @@ class Graph:
             else : return None # si min_dist n'a pas bougé, c'est que la source et la destination ne sont pas reliées
         return "path : " + str(path) + ", distance : " + str(distance[dest])
 
-        """ ************** Question 3  #complexité de O(n+m) ***************
+        """ ************** Question 3  #complexité en O(V+E) ***************
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
         nodes_v[src] = True
         def parcours(node, chemin) :
@@ -117,8 +117,8 @@ class Graph:
 
 
 
-    def connected_components(self):
-        l=[] #listes vides qui contiendra les listes de composants connectés
+    def connected_components(self): #complexité en O(V(V+E))
+        l=[] #liste vide qui contiendra les listes de composants connectés
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
 
         def components(node) :
@@ -144,7 +144,7 @@ class Graph:
         """
         return set(map(frozenset, self.connected_components()))
     
-    def min_power(self, src, dest):
+    def min_power(self, src, dest): #complexité en O(log P + log((b-a)/0.1)), avec P la puissance nécessaire pour parcourir le trajet le + court
         """
         Should return path, min_power. 
         """        
@@ -183,22 +183,20 @@ def graph_from_file(filename):
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
-    f=open(filename)
-    ligne=f.readline().split()
-    nb_node=int(ligne[0])
-    nb_edge=int(ligne[1])
-    nodes=[i for i in range(1, nb_node+1)]
-    G=Graph(nodes)
-    for i in range(nb_edge) :
-        ligne=f.readline().split()
-        node1=int(ligne[0])
-        node2=int(ligne[1])
-        power_min=int(ligne[2])
-        if len(ligne)==3 : G.add_edge(node1, node2, power_min)
-        else : 
-            dist=int(ligne[3])
-            G.add_edge(node1, node2, power_min, dist)
-    return G
+    with open(filename, "r") as file:
+        n, m = map(int, file.readline().split())
+        g = Graph(range(1, n+1))
+        for _ in range(m):
+            edge = list(map(int, file.readline().split()))
+            if len(edge) == 3:
+                node1, node2, power_min = edge
+                g.add_edge(node1, node2, power_min) # will add dist=1 by default
+            elif len(edge) == 4:
+                node1, node2, power_min, dist = edge
+                g.add_edge(node1, node2, power_min, dist)
+            else:
+                raise Exception("Format incorrect")
+    return g
 
 def graph_from_file_route(filename):
     """
@@ -220,21 +218,29 @@ def graph_from_file_route(filename):
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
-    f=open(filename)
-    ligne=f.readline().split()
-    nb_node=int(ligne[0])
-    nb_edge=int(ligne[0])
-    nodes=[i for i in range(1, nb_node+1)]
-    G=Graph(nodes)
-    for i in range(nb_edge) :
-        ligne=f.readline().split()
-        node1=int(ligne[0])
-        node2=int(ligne[1])
-        power_min=int(ligne[2])
-        if len(ligne)==3 : G.add_edge(node1, node2, power_min)
-        else : 
-            dist=int(ligne[3])
-            G.add_edge(node1, node2, power_min, dist)
-    G.graph={k: v for k, v in G.graph.items() if v != []}
-    G.nb_nodes=len(G.graph)
-    return G
+    with open(filename, "r") as file:
+        nb_edges = int(file.readline())
+        nodes = []
+        n = list(range(len(nodes)))
+        g = Graph(n)
+        for _ in range(nb_edges):
+            edge = list(map(int, file.readline().split()))
+            if len(edge) == 3:
+                node1, node2, power_min = edge
+                g.add_edge(node1, node2, power_min) # will add dist=1 by default
+            elif len(edge) == 4:
+                node1, node2, power_min, dist = edge
+                g.add_edge(node1, node2, power_min, dist)
+            else:
+                raise Exception("Format incorrect")
+            if node1 not in nodes :
+                nodes.append(node1)
+            if node2 not in nodes :
+                nodes.append(node2)
+    return g
+
+
+
+
+
+
