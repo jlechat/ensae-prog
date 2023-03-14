@@ -68,11 +68,9 @@ def Kruskal(G) : # prend un graph G en entrée. Complexité en O(Elog(E))
 #Question 14 : complexité en O(V)
 def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
     """ Should return power_min, path """
-    print("go path")
     nodes_v = {node : False for node in S.nodes}  # dictionnaire qui permet de savoir si l'on est déjà passé par un sommet
     nodes_v [src] = True
     powers = [0]  # on crée une liste qui contient toutes les puissances, dont on gardera le max
-    print("go parcours")
     def parcours(node, path) :
         if node == dest:
             return max(powers), path
