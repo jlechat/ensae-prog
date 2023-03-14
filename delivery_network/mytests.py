@@ -6,7 +6,7 @@ from spanning_tree import Kruskal, UnionFind
 from time import perf_counter
 
 
-#calcul du temps nécessaire pour exécuter Kruskal
+#calcul du temps nécessaire pour exécuter graph_from_file_route et Kruskal
 
 for n in range (1,10) :
     data_path = "input/"
@@ -16,7 +16,7 @@ for n in range (1,10) :
     time1_begin=perf_counter()
     g = graph_from_file_route(data_path + file_name)
     time1_stop=perf_counter()
-    time2 = time1_stop-time1_begin
+    time1 = time1_stop-time1_begin
     time2=0
 
     time2_begin=perf_counter()

@@ -24,3 +24,12 @@ for n in range (1,10) : #on va chercher le temps total qu'il faut pour trouver u
     tot_time_sec = (time/nb_tests)*((g.nb_nodes*(g.nb_nodes-1))/2) #à partir du temps moyen obtenu, on calcule le temps qu'il faudrait pour trouver tous les chemins possibles dans le graphe (il y en a n(n-1)/2 avec n = nb de noeuds)
     tot_time_h = tot_time_sec / 3600
     print("Pour calculer l'ensemble des trajets de", file_name, "il faudra : ", tot_time_sec, "secondes, soit", tot_time_h,"heures.")
+
+
+
+"""************ Début des résultats d'exécution **************************
+
+Pour calculer un trajet de routes.1.in il s'est écoulé en moyenne :  8.69997893460095e-06 secondes.
+Pour calculer l'ensemble des trajets de routes.1.in il faudra :  0.001217997050844133 secondes, soit 2.0299950847402215e-05 min.
+Pour calculer un trajet de routes.2.in il s'est écoulé en moyenne :  0.017311100018559955 secondes.
+Pour calculer l'ensemble des trajets de routes.2.in il faudra :  1731.1100018559955 secondes, soit 28.851833364266593 min."""

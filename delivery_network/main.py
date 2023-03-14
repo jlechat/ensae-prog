@@ -1,3 +1,6 @@
+#******************** Ce fichier nous sert lors de la conception des programmes ********************
+
+
 from graph import Graph, graph_from_file_route, graph_from_file
 from spanning_tree import Kruskal, UnionFind
 from time import perf_counter
