@@ -45,15 +45,8 @@ def Kruskal(G) : # prend un graph G en entrée. Complexité en O(Elog(E))
     """
     U = UnionFind(G)
     nodes = []
-    edges = []
     X = Graph(nodes)
-    for u in G.nodes : # construction d'une liste contenant toutes les arêtes de G (arête = [power, u, v])
-        for v in range(len(G.graph[u])) :
-            power, v = G.graph[u][v][1]
-            v = G.graph[u][v][0]
-            if [power, v, u] not in edges : # pour ne pas ajouter deux fois chaque arête
-                edges.append([power, u, v])
-    s_edges = sorted(edges) # on trie les arêtes par ordre de poids
+    s_edges = sorted(G.edges) # on trie les arêtes par ordre de poids
     for edge in s_edges : # pour chaque arête, si les sommets u et v ne sont pas dans le même sous-arbre, on va les relier jusqu'à avoir un arbre unique
         power = edge[0]
         u = edge[1]
@@ -68,11 +61,9 @@ def Kruskal(G) : # prend un graph G en entrée. Complexité en O(Elog(E))
 #Question 14 : complexité en O(V)
 def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
     """ Should return power_min, path """
-    print("go path")
     nodes_v = {node : False for node in S.nodes}  # dictionnaire qui permet de savoir si l'on est déjà passé par un sommet
     nodes_v [src] = True
     powers = [0]  # on crée une liste qui contient toutes les puissances, dont on gardera le max
-    print("go parcours")
     def parcours(node, path) :
         if node == dest:
             return max(powers), path
@@ -93,10 +84,10 @@ def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
 
     return parcours(src, [src])
 
+g = graph_from_file_route("input/routes.2.in")
+k= Kruskal(g)
+print(path_spanning_tree(k, 15,17))
 
-
-G = graph_from_file_route("input/routes.2.in")
-print(path_spanning_tree(Kruskal(G), 1, 5))
 
 
             

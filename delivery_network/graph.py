@@ -16,7 +16,7 @@ class Graph:
         The number of edges.
     """
 
-    def __init__(self, nodes=[]):
+    def __init__(self, nodes=[], edges=[]):
         """
         Initializes the graph with a set of nodes, and no edges. 
         Parameters: 
@@ -25,6 +25,7 @@ class Graph:
             A list of nodes. Default is empty.
         """
         self.nodes = nodes
+        self.edges = edges
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
@@ -69,7 +70,7 @@ class Graph:
 
 
     def get_path_with_power(self, src, dest, power): #complexité en O(V²)
-        #Q5 : on implémente un Dijkstra
+        #Q5 : on implémente un Dijkstra.
         import math
         visited = {node : False for node in self.nodes} #dictionnaire qui permet de savoir si le noeud a déjà été visité ou non
         distance = {node : math.inf for node in self.nodes} #on donne +l'infini comme valeur de distance à la source pour tous les points
@@ -225,6 +226,7 @@ def graph_from_file_route(filename):
         g = Graph(n)
         for _ in range(nb_edges):
             edge = list(map(int, file.readline().split()))
+            g.edges.append([edge[2], edge[0], edge[1]])
             if len(edge) == 3:
                 node1, node2, power_min = edge
                 g.add_edge(node1, node2, power_min) # will add dist=1 by default
@@ -238,7 +240,6 @@ def graph_from_file_route(filename):
             if node2 not in nodes :
                 nodes.append(node2)
     return g
-
 
 
 

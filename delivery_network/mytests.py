@@ -1,14 +1,21 @@
-from graph import graph_from_file, graph_from_file_route
-from random import randrange, choice
+from graph import graph_from_file_route, graph_from_file
+from spanning_tree import Kruskal, UnionFind
 from time import perf_counter
-"""
-g = graph_from_file("input/network.04.in")
-print(g.graph)"""
 
-g = graph_from_file_route("input/routes.2.in")
 
-liste=[l for l in g.graph.keys()]
-a=choice(liste)
-b=choice(liste)
+#calcul du temps nécessaire pour exécuter Kruskal
 
-#A faire ! Changer directement le nombres de noeuds pour optimiser !!
+for n in range (1,10) :
+    data_path = "input/"
+    file_name = "routes."+str(n)+".in"
+    g = graph_from_file_route(data_path + file_name)
+    time=0
+
+    time_begin=perf_counter()
+
+    Kruskal(g)
+
+    time_stop=perf_counter()
+    time+=time_stop-time_begin
+    
+    print("Pour construire un arbre couvrant de ", file_name, "il faut : ", time, "secondes.")
