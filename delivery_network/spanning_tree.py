@@ -49,7 +49,7 @@ def Kruskal(G) : # prend un graph G en entrée. Complexité en O(Elog(E))
     X = Graph(nodes)
     for u in G.nodes : # construction d'une liste contenant toutes les arêtes de G (arête = [power, u, v])
         for v in range(len(G.graph[u])) :
-            power, v = G.graph[u][v][1]
+            power = G.graph[u][v][1]
             v = G.graph[u][v][0]
             if [power, v, u] not in edges : # pour ne pas ajouter deux fois chaque arête
                 edges.append([power, u, v])
@@ -93,11 +93,19 @@ def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
 
     return parcours(src, [src])
 
-
-
-G = graph_from_file_route("input/routes.2.in")
-print(path_spanning_tree(Kruskal(G), 1, 5))
-
+def routes(fichier):
+    g = graph_from_file_route(fichier)
+    kruskal = g.kruskal()
+    f = open(route, "r")
+    h = open("input/network.route.x.out", "w")
+    nb_route = f.readline()
+    for i in range(int(nb_route) - 1):
+        line = f.readline().split()
+        src = int(line[0])
+        dest = int(line[1])
+        h.write(str(kruskal.dfs(src, dest, [])[1]) + "\n")
+    f.close()
+    h.close()
 
             
 
