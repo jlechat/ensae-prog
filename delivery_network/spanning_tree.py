@@ -1,6 +1,6 @@
 from graph import Graph, graph_from_file_route
 
-#Question 12
+#******************** Question 12 ********************
 class UnionFind:
     def __init__ (self, G = Graph()) :
         self.parent = {k : k for k in G.nodes} # le parent va permettre d'associer aux sommets d'un sous-ensemble un unique sommet qui sera leur "père" car on veut construire un arbre
@@ -65,7 +65,8 @@ def Kruskal(G) : # prend un graph G en entrée. Complexité en O(Elog(E))
 
 
 
-#Question 14 : complexité en O(V)
+#******************** Question 14 ******************** 
+# Complexité en O(V)
 def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
     """ Should return power_min, path """
     nodes_v = {node : False for node in S.nodes}  # dictionnaire qui permet de savoir si l'on est déjà passé par un sommet
@@ -91,6 +92,7 @@ def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
 
     return parcours(src, [src])
 
+#******************** Question 15 ********************
 def output_routes(num_fichier):
     g = graph_from_file_route("input/routes."+str(num_fichier)+".in")
     kruskal = Kruskal(g)
@@ -104,10 +106,6 @@ def output_routes(num_fichier):
         h.write(str(src)+" " + str(dest) + " "+ str(path_spanning_tree(kruskal, src, dest)[0]) + "\n")
     f.close()
     h.close()
-            
 
-
-
-
-
-
+output_routes(1)
+#Le code a déjà été exécuté sur le fichier routes.1.in et peut etre consulté dans le delivery_network.

@@ -1,3 +1,8 @@
+#******************** Le numéro des questions est indiquées comme ici ********************
+#******************** Les références pour accéder à nos réponses du TD2 sont indiquées en bas de ce fichier ********************
+
+
+#******************** TP1 ********************
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -284,6 +289,18 @@ def graph_from_file_route(filename):
 #******************** Question 8 ********************
 # Merci de consulter les fichiers tests situés dans le menu "tests".
 
+
+
+#******************** TD2 ********************
+# Pour accéder à nos réponses du TD2, merci de regarder les programmes situés dans les fichiers suivants :
+    #Q10 : l'estimation du temps est dans le fichier main.py
+    #Q11 : non traitée
+    #Q12 : toutes les fonctions sont dans spanning_tree.py
+    #Q13 : les tests sont situés dans le dossier tests
+    #Q14 : spanning_tree.py
+    #Q15 : spanning_tree.py
+
+#mytests.py est un fichier dans lequel on réalise des tests pour régider les programmes.
 
 
 

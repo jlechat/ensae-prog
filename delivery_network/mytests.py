@@ -1,3 +1,5 @@
+#******************** Ce fichier nous sert à la conception des programmes ********************
+
 from graph import graph_from_file, graph_from_file_route
 from spanning_tree import Kruskal
 from random import randrange, choice
