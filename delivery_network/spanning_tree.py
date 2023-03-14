@@ -91,20 +91,19 @@ def path_spanning_tree (S, src, dest) : # prend un arbre couvrant en entrée
 
     return parcours(src, [src])
 
-def routes(fichier):
-    g = graph_from_file_route(fichier)
-    kruskal = g.kruskal()
-    f = open(route, "r")
-    h = open("input/network.route.x.out", "w")
+def output_routes(num_fichier):
+    g = graph_from_file_route("input/routes."+str(num_fichier)+".in")
+    kruskal = Kruskal(g)
+    f = open("input/routes."+str(num_fichier)+".in", "r")
+    h = open("delivery_network/route."+str(num_fichier)+".out", "w")
     nb_route = f.readline()
     for i in range(int(nb_route) - 1):
         line = f.readline().split()
         src = int(line[0])
         dest = int(line[1])
-        h.write(str(kruskal.dfs(src, dest, [])[1]) + "\n")
+        h.write(str(src)+" " + str(dest) + " "+ str(path_spanning_tree(kruskal, src, dest)[0]) + "\n")
     f.close()
     h.close()
-
             
 
 
