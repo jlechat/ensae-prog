@@ -1,3 +1,9 @@
+#******************** Le numéro des questions est indiquées comme ici ********************
+#******************** Les références pour accéder à nos réponses du TD2 sont indiquées en bas de ce fichier ********************
+
+
+#******************** TP1 ********************
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -16,7 +22,7 @@ class Graph:
         The number of edges.
     """
 
-    def __init__(self, nodes=[], edges=[]):
+    def __init__(self, nodes=[]):
         """
         Initializes the graph with a set of nodes, and no edges. 
         Parameters: 
@@ -25,7 +31,7 @@ class Graph:
             A list of nodes. Default is empty.
         """
         self.nodes = nodes
-        self.edges = edges
+        self.edges = []
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
@@ -41,6 +47,8 @@ class Graph:
                 output += f"{source}-->{destination}\n"
         return output
     
+                #******************** Question 1 (partie 1) ********************
+            #On implémente ici la fonction add_edge.
     def add_edge(self, node1, node2, power_min, dist=1):
         """
         Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes. 
@@ -67,10 +75,24 @@ class Graph:
         self.graph[node1]=self.graph[node1]+[[node2, power_min, dist]]
         self.graph[node2]=self.graph[node2]+[[node1, power_min, dist]]
         self.nb_edges+=1
+        self.edges.append([power_min, node1, node2])
 
 
-    def get_path_with_power(self, src, dest, power): #complexité en O(V²)
-        #Q5 : on implémente un Dijkstra.
+                #******************** Question 5 (bonus) ********************
+        # On implémente un Dijkstra pour avoir le plus court chemin.
+        # Complexité en O(V²)
+
+    def get_path_with_power(self, src, dest, power):
+        
+        """Cette méthode permet de retourner le plus court chemin entre src et dest selon une puissance maximale (power).
+        Dans le cas où le chemin est infaisable avec power on retourne None.
+        Args:
+            src (int): point de départ
+            dest (int): point d'arrivée
+            power (int): puissance maximale a ne pas dépasser
+        Returns:
+            Retourne une pharse dans laquelle est donnée le chemin et la distance associée.
+        """
         import math
         visited = {node : False for node in self.nodes} #dictionnaire qui permet de savoir si le noeud a déjà été visité ou non
         distance = {node : math.inf for node in self.nodes} #on donne +l'infini comme valeur de distance à la source pour tous les points
@@ -95,7 +117,18 @@ class Graph:
             else : return None # si min_dist n'a pas bougé, c'est que la source et la destination ne sont pas reliées
         return "path : " + str(path) + ", distance : " + str(distance[dest])
 
-        """ ************** Question 3  #complexité en O(V+E) ***************
+
+       #************** Question 3  #complexité en O(V+E) ***************
+    def get_path_with_power2(self, src, dest, power):
+        """Cette méthode permet de retourner un chemin entre src et dest selon une puissance maximale (power).
+        Dans le cas où le chemin est infaisable avec power on retourne None.
+        Args:
+            src (int): point de départ
+            dest (int): point d'arrivée
+            power (int): puissance maximale a ne pas dépasser
+        Returns:
+            Retourne une liste qui correspond au chemin.
+        """
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
         nodes_v[src] = True
         def parcours(node, chemin) :
@@ -114,8 +147,11 @@ class Graph:
                     return parcours(k, chemin)
             return None
 
-        return parcours(src, [src])"""
+        return parcours(src, [src])
 
+
+            #******************** Question 2 ********************
+            #On implémente ici la méthode connected_components et connected_components_set
 
 
     def connected_components(self): #complexité en O(V(V+E))
@@ -145,6 +181,11 @@ class Graph:
         """
         return set(map(frozenset, self.connected_components()))
     
+
+     #*************** Question 6 ***************
+        # On implémente ici la méthode min_power.
+        # Complexité en O(log P + log((b-a)/0.1)), avec P la puissance nécessaire pour parcourir le trajet le + court
+
     def min_power(self, src, dest): #complexité en O(log P + log((b-a)/0.1)), avec P la puissance nécessaire pour parcourir le trajet le + court
         """
         Should return path, min_power. 
@@ -153,16 +194,19 @@ class Graph:
         b = 1
         def dicho(a, b) : # on raisonne par dichotomie pour approcher la puissance minimale nécessaire sur le trajet
             while b-a > 0.1 :
-                if self.get_path_with_power(src, dest, (a+b)/2) != None: #si le trajet est faisable, alors on peut diminuer b
+                if self.get_path_with_power2(src, dest, (a+b)/2) != None: #si le trajet est faisable, alors on peut diminuer b
                     b = (a+b)/2
                 else :                                                   #si le trajet n'est pas faisable, il faut augmenter a
                     a = (a+b)/2
                 dicho(a, b)
-            return self.get_path_with_power(src, dest, b), b
+            return self.get_path_with_power2(src, dest, b), b
         
-        while self.get_path_with_power(src, dest, b) == None : # on augmente b rapidement pour trouver un majorant de la puissance du trajet
+        while self.get_path_with_power2(src, dest, b) == None : # on augmente b rapidement pour trouver un majorant de la puissance du trajet
             b = 2*b
         return dicho(a, b)
+
+            #******************** Question 1 (partie 2) & Question 4 ********************
+            #On implémente ici la fonction graph_from_file, avec la distance optionnelle (Q4).
 
 def graph_from_file(filename):
     """
@@ -199,6 +243,10 @@ def graph_from_file(filename):
                 raise Exception("Format incorrect")
     return g
 
+
+                #******************** Fin du TP1 ********************
+            # Ici on adapte la fonction graph_from_file pour les fichiers routes
+
 def graph_from_file_route(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class, for files routes.
@@ -221,12 +269,9 @@ def graph_from_file_route(filename):
     """
     with open(filename, "r") as file:
         nb_edges = int(file.readline())
-        nodes = []
-        n = list(range(len(nodes)))
-        g = Graph(n)
+        g = Graph([])
         for _ in range(nb_edges):
             edge = list(map(int, file.readline().split()))
-            g.edges.append([edge[2], edge[0], edge[1]])
             if len(edge) == 3:
                 node1, node2, power_min = edge
                 g.add_edge(node1, node2, power_min) # will add dist=1 by default
@@ -235,13 +280,21 @@ def graph_from_file_route(filename):
                 g.add_edge(node1, node2, power_min, dist)
             else:
                 raise Exception("Format incorrect")
-            if node1 not in nodes :
-                nodes.append(node1)
-            if node2 not in nodes :
-                nodes.append(node2)
     return g
 
 
 
+#******************** Question 8 ********************
+# Merci de consulter les fichiers tests situés dans le menu "tests".
 
+
+
+#******************** TD2 ********************
+# Pour accéder à nos réponses du TD2, merci de regarder les programmes situés dans les fichiers suivants :
+    #Q10 : l'estimation du temps est dans le fichier time_get_path_with_power.py
+    #Q11 : non traitée
+    #Q12 : toutes les fonctions sont dans spanning_tree.py
+    #Q13 : les tests sont situés dans le dossier tests
+    #Q14 : spanning_tree.py
+    #Q15 : voir time_spanning_tree.py
 
