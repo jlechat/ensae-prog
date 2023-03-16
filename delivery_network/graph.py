@@ -93,7 +93,6 @@ class Graph:
         """
         if node1 not in self.nodes  : return("Il manque le noeud", node1)
         if node2 not in self.nodes : return("Il manque le noeud", node2)
-
         j=0
         for edge in self.graph[node1] :
             if node2 == edge[0] : self.graph[node1][j]=self.graph[node1][j]+[utility]
