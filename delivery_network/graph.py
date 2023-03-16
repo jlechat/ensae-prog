@@ -75,7 +75,8 @@ class Graph:
         self.graph[node1]=self.graph[node1]+[[node2, power_min, dist]]
         self.graph[node2]=self.graph[node2]+[[node1, power_min, dist]]
         self.nb_edges+=1
-        self.edges.append([power_min, node1, node2])
+        self.edges.append([node1, node2, power_min])
+
 
 
                 #******************** Question 5 (bonus) ********************
@@ -119,6 +120,22 @@ class Graph:
 
 
        #************** Question 3  #complexité en O(V+E) ***************
+    def aux_parcours(self, node, path, src, dest, nodes_v, power) :
+        if node == dest:
+            return path
+        for i in self.graph[node] :
+            k=i[0]
+            k_power = i[1]
+            if power >= k_power and not nodes_v[k]:
+                nodes_v[k]=True
+                return self.aux_parcours(k, path+[k], src, dest, nodes_v, power)
+            elif i == self.graph[node][-1] and path[-1] != src :
+                nodes_v[i[0]]=True
+                path.pop()
+                k = path[-1]
+                return self.aux_parcours(k, path, src, dest, nodes_v, power)
+        return None
+    
     def get_path_with_power2(self, src, dest, power):
         """Cette méthode permet de retourner un chemin entre src et dest selon une puissance maximale (power).
         Dans le cas où le chemin est infaisable avec power on retourne None.
@@ -131,45 +148,27 @@ class Graph:
         """
         nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
         nodes_v[src] = True
-        def parcours(node, chemin) :
-            if node == dest:
-                return chemin
-            for i in self.graph[node] :
-                k=i[0]
-                k_power = i[1]
-                if power >= k_power and not nodes_v[k]:
-                    nodes_v[k]=True
-                    return parcours(k, chemin+[k])
-                elif i == self.graph[node][-1] and chemin[-1] != src :
-                    nodes_v[i[0]]=True
-                    chemin.pop()
-                    k = chemin[-1]
-                    return parcours(k, chemin)
-            return None
 
-        return parcours(src, [src])
+        return self.aux_parcours(src, [src], src, dest, nodes_v, power)
 
 
             #******************** Question 2 ********************
             #On implémente ici la méthode connected_components et connected_components_set
 
-
+    def aux_connected_components(self, node, nodes_v) : #on définit une fonction auxiliaire qui retourne la liste des composantes connexes d'un sommet
+        comp=[node]
+        for i in self.graph[node] :
+            k=i[0]
+            if not nodes_v[k] :
+                nodes_v[k]=True
+                comp+=self.aux_connected_components(k, nodes_v)
+        return comp
+    
     def connected_components(self): #complexité en O(V(V+E))
         l=[] #liste vide qui contiendra les listes de composants connectés
-        nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point
-
-        def components(node) :
-            comp=[node]
-            for i in self.graph[node] :
-                k=i[0]
-                if not nodes_v[k] :
-                    nodes_v[k]=True
-                    comp+=components(k)
-            return comp
-        
+        nodes_v={node : False for node in self.nodes} #dictionnaire qui permet de savoir si l'on est déjà passé par un point        
         for k in self.nodes :
-            if not nodes_v[k] : l.append(components(k))
-
+            if not nodes_v[k] : l.append(self.aux_connected_components(k, nodes_v))
         return l
 
 
@@ -186,24 +185,26 @@ class Graph:
         # On implémente ici la méthode min_power.
         # Complexité en O(log P + log((b-a)/0.1)), avec P la puissance nécessaire pour parcourir le trajet le + court
 
+    def aux_dicho(self, src, dest, a, b) : #fonction auxiliaire de min_power, qui réalise la dichotomie pour approcher la puissance minimale nécessaire sur le trajet
+        while b-a > 0.1 :
+            if self.get_path_with_power2(src, dest, (a+b)/2) != None: #si le trajet est faisable, alors on peut diminuer b
+                b = (a+b)/2
+            else :                                                   #si le trajet n'est pas faisable, il faut augmenter a
+                a = (a+b)/2
+            self.aux_dicho(src, dest, a, b)
+        return self.get_path_with_power2(src, dest, b), b
+
     def min_power(self, src, dest): #complexité en O(log P + log((b-a)/0.1)), avec P la puissance nécessaire pour parcourir le trajet le + court
         """
         Should return path, min_power. 
         """        
         a = 0
-        b = 1
-        def dicho(a, b) : # on raisonne par dichotomie pour approcher la puissance minimale nécessaire sur le trajet
-            while b-a > 0.1 :
-                if self.get_path_with_power2(src, dest, (a+b)/2) != None: #si le trajet est faisable, alors on peut diminuer b
-                    b = (a+b)/2
-                else :                                                   #si le trajet n'est pas faisable, il faut augmenter a
-                    a = (a+b)/2
-                dicho(a, b)
-            return self.get_path_with_power2(src, dest, b), b
-        
+        b = 1     
         while self.get_path_with_power2(src, dest, b) == None : # on augmente b rapidement pour trouver un majorant de la puissance du trajet
             b = 2*b
-        return dicho(a, b)
+        return self.aux_dicho(src, dest, a, b)
+
+
 
             #******************** Question 1 (partie 2) & Question 4 ********************
             #On implémente ici la fonction graph_from_file, avec la distance optionnelle (Q4).
@@ -274,12 +275,23 @@ def graph_from_file_route(filename):
             edge = list(map(int, file.readline().split()))
             if len(edge) == 3:
                 node1, node2, power_min = edge
-                g.add_edge(node1, node2, power_min) # will add dist=1 by default
-            elif len(edge) == 4:
-                node1, node2, power_min, dist = edge
-                g.add_edge(node1, node2, power_min, dist)
+                g.add_edge(node1, node2, power_min)
             else:
                 raise Exception("Format incorrect")
+    return g
+
+
+
+def add_utility(num_file): #complexité en O(E²)
+    h = graph_from_file("input/network."+str(num_file)+".in")
+    for h_edge in h.edges:
+        node1, node2, utility = h_edge
+        g = graph_from_file_route("input/routes."+str(num_file)+".in")
+        for g_edge in g.edges :
+            nodeu, nodev, power_min = g_edge
+            if nodeu == node1 or nodeu == node2 :
+                if nodev == node2 or nodev == node1 :
+                    g_edge += [utility]
     return g
 
 
