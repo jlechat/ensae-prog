@@ -13,7 +13,9 @@ pour l'instant elle est sur le graph, mais ca va etre compliqué de triller pour
 essayer de le faire sur self.edges ? qui contient [min_power, node1, node2] comme le graph est non orientée.
 il on veut ajouter la puissance associée dans cette liste de liste, mais il faut trouver le bon indice pour l'ajouter au bon endroit.
 
-A FAIRE : que faire si on a deux utilités différentes ? et regler le pb dans le dico
+A FAIRE : que faire si on a deux utilités différentes ? et regler le pb dans le dico (avec la dernière arrete)
+
+A CHANGER : appeler get path with power sans contrainte de puissance pour trouver le graph optimisé (déjà fait ?)
 """
 
 """
