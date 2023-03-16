@@ -337,6 +337,12 @@ def add_utility_from_file(filename,g):
                 g.add_utility(node1, node2, utility)
             else:
                 raise Exception("Format incorrect")
+        
+        for i in g.graph.keys() :
+            j=0
+            for edge in g.graph[i] :
+                if len(edge)==3 : g.graph[i][j].append(1)
+                j+=1
     return g
 
 
