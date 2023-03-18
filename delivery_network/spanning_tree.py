@@ -140,7 +140,7 @@ def path_spanning_tree2 (X, src, dest) : # complexité sans tenir compte de l'in
 #******************** Question 15 ********************
 def output_routes(num_fichier):
     g = graph_from_file_route("input/routes."+str(num_fichier)+".in")
-    kruskal = Kruskal(g)
+    kruskal = Kruskal(g)[0]
     f = open("input/routes."+str(num_fichier)+".in", "r")
     h = open("delivery_network/route."+str(num_fichier)+".out", "w")
     nb_route = f.readline()
@@ -152,7 +152,7 @@ def output_routes(num_fichier):
     f.close()
     h.close()
 
-output_routes(1)
+#output_routes(1)
 #Le code a déjà été exécuté sur le fichier routes.1.in et peut être consulté dans le delivery_network.
 
 
