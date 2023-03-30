@@ -41,11 +41,29 @@ class Camion:
                 a = list(map(int, file.readline().split()))
                 self.dico[a[0]]=a[1]
 
+    def find_camion(self,g) :
+        
+
+    
+def output_routes(num_fichier):
+    g = graph_from_file_route("input/routes."+str(num_fichier)+".in")
+    kruskal = Kruskal(g)
+    f = open("input/routes."+str(num_fichier)+".in", "r")
+    h = open("delivery_network/route."+str(num_fichier)+".out", "w")
+    nb_route = f.readline()
+    for i in range(int(nb_route) - 1):
+        line = f.readline().split()
+        src = int(line[0])
+        dest = int(line[1])
+        h.write(str(src)+" " + str(dest) + " "+ str(path_spanning_tree(kruskal, src, dest)[0]) + "\n")
+    f.close()
+    h.close()
+
 
 cam=Camion()
 print(cam.dico)
 
-cam.add_camion("input/trucks.1.in")
+cam.add_camion("input/trucks.0.in")
 print(cam.dico)
 
 
