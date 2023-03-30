@@ -3,7 +3,6 @@
 
 
 #******************** TP1 ********************
-
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -290,8 +289,6 @@ def add_utility(num_file): #complexité en O(E²)
     return h
 
 
-g = add_utility(1)
-print(g.edges)
 #******************** Question 8 ********************
 # Merci de consulter les fichiers tests situés dans le menu "tests".
 

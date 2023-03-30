@@ -1,4 +1,5 @@
 from graph import graph_from_file_route, graph_from_file, Graph, add_utility
+from spanning_tree import Kruskal, path_spanning_tree
 
 #algo glouton : pas très optimal, mais bonne approximation
 #https://nsi4noobs.fr/IMG/pdf/f5_1nsi_algos_gloutons.pdf
@@ -41,24 +42,19 @@ class Camion:
                 a = list(map(int, file.readline().split()))
                 self.dico[a[0]]=a[1]
 
-    def find_camion(self,g) :
-        
 
-    
-def output_routes(num_fichier):
-    g = graph_from_file_route("input/routes."+str(num_fichier)+".in")
-    kruskal = Kruskal(g)
-    f = open("input/routes."+str(num_fichier)+".in", "r")
-    h = open("delivery_network/route."+str(num_fichier)+".out", "w")
-    nb_route = f.readline()
-    for i in range(int(nb_route) - 1):
-        line = f.readline().split()
-        src = int(line[0])
-        dest = int(line[1])
-        h.write(str(src)+" " + str(dest) + " "+ str(path_spanning_tree(kruskal, src, dest)[0]) + "\n")
-    f.close()
-    h.close()
+    def find_all_camion(self,g):
+        g=Kruskal(g)
 
+        for edge in g.edges :
+            k=0
+            min_pow=path_spanning_tree(g, edge[0], edge[1])[1]
+
+            #il faut trouver le camion correspondant
+
+
+#a mettre en commun avec Fanny
+#son githib https://github.com/Superfa1 (MKP)
 
 cam=Camion()
 print(cam.dico)
