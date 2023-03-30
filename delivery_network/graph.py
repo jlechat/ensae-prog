@@ -307,41 +307,16 @@ def graph_from_file_route(filename):
                 raise Exception("Format incorrect")
     return g
 
-def add_utility_from_file(filename,g):
-    """
-    Reads a text file and returns the graph as an object of the Graph class, for files routes.
-
-    The file should have the following format: 
-        The first line of the file is 'n' the number of edges
-        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-        The nodes (node1, node2) should be named 1..n
-        All values are integers.
-
-    Parameters: 
-    -----------
-    filename: str
-        The name of the file
-
-    Outputs: 
-    -----------
-    G: Graph
-        An object of the class Graph with the graph from file_name.
-    """
-    with open(filename, "r") as file:
-        nb_edges = int(file.readline())
-        for _ in range(nb_edges):
-            edge = list(map(int, file.readline().split()))
-            if len(edge) == 3:
-                node1, node2, utility = edge
-                g.add_utility(node1, node2, utility)
-            else:
-                raise Exception("Format incorrect")
-        
-        for i in g.graph.keys() :
-            j=0
-            for edge in g.graph[i] :
-                if len(edge)==3 : g.graph[i][j].append(1)
-                j+=1
+def add_utility(num_file): #complexité en O(E²)
+    h = graph_from_file("input/network."+str(num_file)+".in")
+    for h_edge in h.edges:
+        node1, node2, utility = h_edge
+        g = graph_from_file_route("input/routes."+str(num_file)+".in")
+        for g_edge in g.edges :
+            nodeu, nodev, power_min = g_edge
+            if nodeu == node1 or nodeu == node2 :
+                if nodev == node2 or nodev == node1 :
+                    g_edge += [utility]
     return g
 
 
