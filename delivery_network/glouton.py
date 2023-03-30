@@ -1,7 +1,5 @@
-from graph import graph_from_file_route, graph_from_file, Graph, add_utility_from_file
+from graph import graph_from_file_route, graph_from_file, Graph, add_utility
 
-g=graph_from_file("input/network.1.in")
-add_utility_from_file("input/routes.1.in", g)
 
 #algo glouton : pas très optimal, mais bonne approximation
 #https://nsi4noobs.fr/IMG/pdf/f5_1nsi_algos_gloutons.pdf
@@ -16,6 +14,8 @@ il on veut ajouter la puissance associée dans cette liste de liste, mais il fau
 A FAIRE : que faire si on a deux utilités différentes ? et regler le pb dans le dico (avec la dernière arrete)
 
 A CHANGER : appeler get path with power sans contrainte de puissance pour trouver le graph optimisé (déjà fait ?)
+[node1, node2, min_power, utility]
+
 """
 
 """
@@ -28,4 +28,5 @@ for edge in dico.keys() :
 sorted_dico= dict(sorted(dico.items(), key=lambda item:item[1][4]))
 print(sorted_dico)
 """
+g=add_utility(1)
 print(g.edges)

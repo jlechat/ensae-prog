@@ -308,16 +308,31 @@ def graph_from_file_route(filename):
     return g
 
 def add_utility(num_file): #complexité en O(E²)
-    h = graph_from_file("input/network."+str(num_file)+".in")
-    for h_edge in h.edges:
-        node1, node2, utility = h_edge
-        g = graph_from_file_route("input/routes."+str(num_file)+".in")
-        for g_edge in g.edges :
-            nodeu, nodev, power_min = g_edge
-            if nodeu == node1 or nodeu == node2 :
-                if nodev == node2 or nodev == node1 :
-                    g_edge += [utility]
-    return g
+    """_summary_
+
+    Args:
+        num_file (_type_): _description_
+
+    Returns:
+        [node1, node2, min_power_utility]
+    """
+    h = graph_from_file_route("input/routes."+str(num_file)+".in")
+    g = graph_from_file("input/network."+str(num_file)+".in")
+    for g_edge in g.edges:
+        node1, node2, power_min = g_edge
+        for k in range(len(h.edges)) :
+            if len(h.edges[k]) == 3 :
+                nodeu, nodev, utility = h.edges[k]
+                if nodeu == node1 or nodeu == node2 :
+                    if nodev == node2 or nodev == node1 :
+                        h.edges[k].insert(2, power_min)
+                    else : h.edges[k].insert(2, 1)
+    return h
+
+
+
+g = add_utility(1)
+print(g.edges)
 
 
 #******************** Question 8 ********************
@@ -334,3 +349,8 @@ def add_utility(num_file): #complexité en O(E²)
     #Q14 : spanning_tree.py
     #Q15 : voir time_spanning_tree.py
 
+#Accès a la liste l[i] : O(i)
+#supprimer à la fin ou au début : 0(1)
+#acceder à un élement dans un set : appartenance, ajouter, supprimer O(1)
+#dictionnaire : 0(1)
+#Tri : O(nlog(n))
